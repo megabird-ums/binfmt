@@ -103,8 +103,9 @@ ARG TARGETPLATFORM
 ARG QEMU_VERSION
 WORKDIR /src
 RUN apk add --no-cache git
+RUN git config --global --add safe.directory /src
 RUN --mount=target=. \
-  TARGETPLATFORM=$TARGETPLATFORM xx-go build \
+  TARGETPLATFORM=$TARGETPLATFORM xx-go build -buildvcs=false \
     -ldflags "-X main.revision=$(git rev-parse --short HEAD) -X main.qemuVersion=${QEMU_VERSION}" \
     -o /go/bin/binfmt ./cmd/binfmt && \
     xx-verify --static /go/bin/binfmt
